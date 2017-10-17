@@ -49,7 +49,22 @@ def show_s3_buckets():
 		print("###Region:({})###".format(region))
 		for bucket in get_s3_buckets(region):
 			for object in bucket.objects.all():
-				print("  * {}: {}".format(bucket.name, object.key))
+				print("  * {} : {}".format(bucket.name, object.key))
+
+def show_s3_buckets_acl():
+	for region in get_regions():
+		print("###Region:({})###".format(region))
+		for bucket in get_s3_buckets(region):
+			print(" * {}".format(bucket.name))
+			for grant in bucket.Acl().grants:
+				grantee = grant['Grantee']
+				display_name = grantee.get("DisplayName", 'undefined')
+				uri = grantee.get("URI", 'undefined')
+				permission = grant['Permission']
+				if display_name == 'undefined':
+					print("   - {}({})".format(uri, permission))
+				else:
+					print("   - {}({})".format(display_name, permission))
 
 def get_iam_users():
 	users = get_client('iam')
@@ -59,17 +74,13 @@ def get_iam_groups(username):
 	groups = get_client('iam').list_groups_for_user(UserName=username)
 	return groups['Groups']
 
-def get_iam_policies(username):
-	policies = get_client('iam').list_user_policies(UserName=username)
-	return policies['PolicyNames']
+def get_iam_role_policies(rolename):
+	role_policies = get_client('iam').list_role_policies(RoleName=rolename)
+	return role_policies['PolicyNames']
 
 def get_iam_roles():
 	roles = get_client('iam').list_roles()
 	return roles['Roles']
 
-
 if __name__ == '__main__':
-	for user in get_iam_users():
-		username=user['UserName']
-		for group in get_iam_groups(username):
-			print("{} . {} - {}".format(username, group['GroupName'], group['Arn']))
+	show_s3_buckets_acl()
