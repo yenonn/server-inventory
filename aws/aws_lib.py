@@ -6,6 +6,14 @@ service_client_list = [
 		's3',
 	]
 
+# get the size in human readable format
+def sizeof_fmt(num):
+	for x in ['bytes', 'KB', 'MB', 'GB', 'TB' ]:
+		if num < 1024.0:
+			return "%3.1f %s" % (num, x)
+		num /= 1024.0
+
+
 def get_client(service_client):
 	if service_client in service_client_list:
 		return boto3.client(service_client)
@@ -47,9 +55,14 @@ def get_s3_buckets(region):
 def show_s3_buckets():
 	for region in get_regions():
 		print("###Region:({})###".format(region))
+		total_bucket_size = 0
 		for bucket in get_s3_buckets(region):
+			print(" * {}(Creation date: {})".format(bucket.name, bucket.creation_date))
 			for object in bucket.objects.all():
-				print("  * {} : {}".format(bucket.name, object.key))
+				bucket_obj = get_resources('s3', region).Object(bucket.name, object.key)
+				total_bucket_size += int(bucket_obj.content_length)
+				print("   - {}(Last Modified: {} Size: {})".format(object.key, object.last_modified, sizeof_fmt(bucket_obj.content_length)))
+			print(" Total size: {}".format(sizeof_fmt(total_bucket_size)))
 
 def show_s3_buckets_acl():
 	for region in get_regions():
@@ -83,4 +96,4 @@ def get_iam_roles():
 	return roles['Roles']
 
 if __name__ == '__main__':
-	show_s3_buckets_acl()
+	show_s3_buckets()
