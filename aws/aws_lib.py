@@ -1,10 +1,11 @@
 import boto3
+
 service_client_list = [
-		'ec2',
-		'emr',
-		'iam',
-		's3',
-	]
+	'ec2',
+	'emr',
+	'iam',
+	's3',
+]
 
 # get the size in human readable format
 def sizeof_fmt(num):
