@@ -14,7 +14,6 @@ def sizeof_fmt(num):
 			return "%3.1f %s" % (num, x)
 		num /= 1024.0
 
-
 def get_client(service_client):
 	if service_client in service_client_list:
 		return boto3.client(service_client)
