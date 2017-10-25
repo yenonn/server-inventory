@@ -5,6 +5,7 @@ service_client_list = [
   'emr',
   'iam',
   's3',
+  'rds'
 ]
 
 # get the size in human readable format
@@ -95,5 +96,21 @@ def get_iam_roles():
   roles = get_client('iam').list_roles()
   return roles['Roles']
 
+def show_rds_cluster():
+  for region in get_regions():
+    print("###Region:({})###".format(region))
+    rds_client = boto3.client('rds', region_name=region)
+    if len(rds_client.describe_db_clusters()['DBClusters']):
+      print(rds_client.describe_db_clusters()['DBClusters'])
+
+def show_rds_snapshots():
+  for region in get_regions():
+    print("###Region:({})###".format(region))
+    rds_client = boto3.client('rds', region_name=region)
+    if len(rds_client.describe_db_snapshots()['DBSnapshots']):
+      db_snapshot = rds_client.describe_db_snapshots()['DBSnapshots'][0]
+      for key, value in db_snapshot.items():
+        print("  {}: {}".format(key, value))
+
 if __name__ == '__main__':
-  show_s3_buckets()
+  show_rds_snapshots()
