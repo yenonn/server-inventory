@@ -40,6 +40,16 @@ def get_ec2_instances(region):
     }]
   )
 
+def get_ec2_ebs(region):
+  ec2_instances = get_resources('ec2', region)
+  return ec2_instances.volumes.all()
+
+def show_ebs_volumes():
+  for region in get_regions():
+    print("###(Region:{})###".format(region))
+    for vol in get_ec2_ebs(region):
+      print("ID: {}({}): {}GB, Created: {}".format(vol.id, vol.state, vol.size, vol.create_time))
+
 def show_ec2_instances():
   for region in get_regions():
     print("###(Region:{})###".format(region))
@@ -113,4 +123,4 @@ def show_rds_snapshots():
         print("  {}: {}".format(key, value))
 
 if __name__ == '__main__':
-  show_rds_snapshots()
+  show_ebs_volumes()
