@@ -4,7 +4,7 @@ import objectpath
 from datetime import datetime, timedelta, date
 
 
-def get_running_instances():
+def get_price_running_instances():
     aws_regions = {
             "us-east-1":"US East (N. Virginia)",
             "us-east-2":"US East (Ohio)",
@@ -91,5 +91,5 @@ def get_instance_pricing(instance_type, region_name):
 
 
 if __name__ == '__main__':
-    get_running_instances()
+    get_price_running_instances()
 
