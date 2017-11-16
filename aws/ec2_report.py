@@ -292,8 +292,8 @@ if __name__ == '__main__':
     else:
       if table.get_num_rows() > 0:
         send_ses_email(
-          to_address='ec2-users@lynxanalytics.com',
-          from_address='ec2-users@lynxanalytics.com',
+          to_address='yenonn@gmail.com',
+          from_address='yenonn@gmail.com',
           subject='%s Instances Report - %s instances running' % (
               table.get_service(), 
               table.get_num_rows()
