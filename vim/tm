@@ -35,4 +35,5 @@ def tmux_events(tmux_session_list):
 
 if __name__ == "__main__":
     tmux_list = tmux_sessions()
-    tmux_events(tmux_list)
+    if len(tmux_list):
+        tmux_events(tmux_list)
